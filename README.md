@@ -18,20 +18,20 @@
 
 ## 📌 Overview
 
-Squid proxy configuration hardening auditor (offline, read-only)
+
+OSquidX is an offline, read-only Squid proxy configuration hardening auditor for both forward and reverse deployments. It parses squid.conf (with include globs and continuations), evaluates http_access rules for open-proxy and SSRF exposure, and reviews SSL-Bump, authentication, cache-manager and peer settings. Secrets are masked throughout, and findings mapped to CWE/MITRE are exportable as TXT, Markdown, JSON, CSV or SARIF.
 
 ---
 
 ## ✨ Features
 
-- Stdlib squid.conf parser — line continuation, include globs (conf.d/*.conf), loop detection, quoted ACL files
-- http_access evaluator — allow all, missing deny all, open proxy, CONNECT !SSL_ports, Safe_ports, manager, to_localhost / to_linklocal (cloud metadata SSRF)
-- SSL-Bump & TLS — sslproxy_cert_error, DONT_VERIFY_PEER, tls-min-version, weak ciphers, sslcrtd db & CA key perms
-- Auth helpers — basic over cleartext, passwd file perms, credentialsttl, LDAP bind secrets, keytab, NTLM
-- cachemgr_passwd, ICP / HTCP / SNMP, cache_peer login=, accel vhost relay, privacy headers, logging, cache_dir
-- Secrets masked everywhere; --root offline trees; CWE + MITRE
-- Export TXT / Markdown / JSON / CSV / SARIF 2.1.0
-- Self-test --demo, CI gates --fail-on / --min-severity
+
+- Stdlib squid.conf parser with line continuation, include globs (conf.d/*.conf) and loop detection
+- http_access evaluator: allow-all, missing deny-all, open proxy, CONNECT !SSL_ports, cloud-metadata SSRF
+- SSL-Bump & TLS review: sslproxy_cert_error, DONT_VERIFY_PEER, tls-min-version, weak ciphers, CA key perms
+- Auth helper checks: basic over cleartext, passwd file perms, credentialsttl, LDAP/NTLM bind secrets
+- cachemgr_passwd, ICP/HTCP/SNMP, cache_peer login=, accel vhost relay and logging/privacy checks
+- Secrets masked, offline --root trees, CWE+MITRE mapping and TXT/MD/JSON/CSV/SARIF export with CI gates
 
 ---
 
@@ -44,8 +44,13 @@ Squid proxy configuration hardening auditor (offline, read-only)
 
 ## 🚀 Usage
 
+
 ```bash
-./OSquidX
+./OSquidX --scan -f sarif -o squid.sarif
+./OSquidX -c /etc/squid/squid.conf --min-severity medium
+./OSquidX -r /mnt/image --fail-on high --json
+./OSquidX --demo
+./OSquidX --help
 ```
 
 ---
